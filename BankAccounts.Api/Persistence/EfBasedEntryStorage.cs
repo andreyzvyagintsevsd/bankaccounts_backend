@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace BankAccounts.Api.Persistence
 {
+    /// <summary>
+    /// EF-backed bank account entries storage
+    /// </summary>
     public class EfBasedEntryStorage : IStorage
     {
         private readonly BankAccountsDbContext _dbContext;
@@ -80,7 +83,7 @@ namespace BankAccounts.Api.Persistence
             await _dbContext.SaveChangesAsync(token);
         }
 
-        public async Task<Entry> Update(Entry entry, CancellationToken token)
+        public async Task<Entry> AddOrUpdate(Entry entry, CancellationToken token)
         {
             var add = entry.Id == 0;
             var efEntry = _dbContext.Attach(entry);

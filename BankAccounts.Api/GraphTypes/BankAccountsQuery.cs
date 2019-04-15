@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BankAccounts.Api.GraphTypes
 {
+    /// <summary>
+    /// Defines GQL root queries to access bank account entries
+    /// </summary>
     public class BankAccountsQuery : ObjectGraphType
     {
         private readonly IStorage _storage;

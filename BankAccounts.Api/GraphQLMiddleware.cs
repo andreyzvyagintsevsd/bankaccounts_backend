@@ -4,6 +4,7 @@ using GraphQL.Http;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace BankAccounts.Api
 {
+    /// <summary>
+    /// A middleware to process queries
+    /// </summary>
     public class GraphQLMiddleware
     {
         private readonly RequestDelegate _next;
@@ -27,10 +31,11 @@ namespace BankAccounts.Api
             _executer = executer;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext, ISchema schema, IServiceProvider serviceProvider)
+        public async Task InvokeAsync(HttpContext httpContext, ISchema schema, IServiceProvider serviceProvider, ILogger<GraphQLMiddleware> logger)
         {
             if (httpContext.Request.Path.StartsWithSegments("/api/graphql") && string.Equals(httpContext.Request.Method, "POST", StringComparison.OrdinalIgnoreCase))
             {
+                logger.LogTrace($"Processing GQL query...");
                 string body;
                 using (var streamReader = new StreamReader(httpContext.Request.Body))
                 {
@@ -52,12 +57,15 @@ namespace BankAccounts.Api
             }
             else
             {
+                // :TRICKY: This effectively intercepts all non-gql requests.
+                // This is not acceptable beyond demonstration purposes.
                 using (TextWriter tr = new StreamWriter(httpContext.Response.Body))
                 {
                     tr.Write("Please use GraphQL API at /api/graphql");
                 }
                 httpContext.Response.StatusCode = 400;
-                //await _next(httpContext);
+                
+                // disabled intentionally: await _next(httpContext);
             }
         }
 

@@ -112,7 +112,7 @@ namespace BankAccounts.Test
                 var storage = new EfBasedEntryStorage(db);
                 Assert.Empty(await storage.List(token));
                 
-                var entry = await storage.Update(new Api.Models.Entry
+                var entry = await storage.AddOrUpdate(new Api.Models.Entry
                 {
                     Id = 0,
                     AccountHolderName = string.Empty,
@@ -126,7 +126,7 @@ namespace BankAccounts.Test
                 Assert.NotEmpty(await storage.List(token));
 
                 entry.BankName = "bank";
-                await storage.Update(entry, token);
+                await storage.AddOrUpdate(entry, token);
 
                 Assert.Equal("bank", (await storage.List(token)).Single().BankName);
 

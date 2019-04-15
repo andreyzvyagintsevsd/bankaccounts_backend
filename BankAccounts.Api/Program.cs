@@ -19,6 +19,7 @@ namespace BankAccounts.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(opt => opt.AddConsole())
                 .UseStartup<Startup>();
     }
 }

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BankAccounts.Api.GraphTypes
 {
+    /// <summary>
+    /// Defines GQL mutations to manipulate bank account entries
+    /// </summary>
     public class BankAccountsMutation : ObjectGraphType
     {
         private readonly IStorage _storage;
@@ -21,7 +24,7 @@ namespace BankAccounts.Api.GraphTypes
                 .Argument<DbEntryInputType>("entry", string.Empty)
                 .ResolveAsync(async ctx =>
                 {
-                    return await _storage.Update(ctx.GetArgument<Entry>("entry"), ctx.CancellationToken);
+                    return await _storage.AddOrUpdate(ctx.GetArgument<Entry>("entry"), ctx.CancellationToken);
                 });
 
             Field<IntGraphType, int>()
