@@ -33,7 +33,16 @@ namespace BankAccounts.Api
                 .AddScoped<IStorage, EfBasedEntryStorage>()
                 .AddDbContext<BankAccountsDbContext>(opt =>
                 {
-                    opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+                    var cs = _configuration.GetConnectionString("DefaultConnection");
+
+                    if (string.IsNullOrEmpty(cs))
+                    {
+                        opt.UseInMemoryDatabase("BankAccountsDb");
+                    }
+                    else
+                    {
+                        opt.UseSqlServer(cs);
+                    }
                 });
 
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
