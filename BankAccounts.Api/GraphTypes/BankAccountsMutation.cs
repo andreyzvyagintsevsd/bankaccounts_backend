@@ -32,7 +32,7 @@ namespace BankAccounts.Api.GraphTypes
                 .Argument<IntGraphType>("id", string.Empty)
                 .ResolveAsync(async ctx =>
                 {
-                    await _storage.FakeSome(ctx.GetArgument<int>("id"), ctx.CancellationToken);
+                    await _storage.Remove(ctx.GetArgument<int>("id"), ctx.CancellationToken);
                     return default;
                 });
 
